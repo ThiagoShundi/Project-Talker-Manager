@@ -8,6 +8,7 @@ const readTalkerFile = async () => {
 
     return JSON.parse(arrayTalker);
   } catch (error) {
+    console.log(error);
     return null;
   }
 };
@@ -24,37 +25,50 @@ const writeFile = async (content) => {
 
     return JSON.parse(arrayLogin);
   } catch (error) {
+    console.log(error);
     return null;
   }
 };
 
-const createLogin = async (email, password) => {
-    const arrayTalker = await readTalkerFile();
+const createLogin = async () => {
+    const arrayTalkerLogin = await readTalkerFile();
     const token = Math.random().toString(36).substring(2, 10) 
     + Math.random().toString(36).substring(2, 10);
-    const newLogin = { email, password, token };
+    const newLogin = { token };
 
-    await writeFile(arrayTalker);
+    await writeFile(arrayTalkerLogin);
 
     return newLogin;
   };
   
 const createTalker = async (name, age, talk) => {
     const arrayTalker = await readTalkerFile();
+    const idValue = (await readTalkerFile()).length + 1;
+    
+    const newTalker = { id: idValue, name, age, talk };
 
-    const newTalker = { name, age, talk };
-
+    // console.log(newTalker);
     arrayTalker.push(newTalker);
 
     await writeFile(arrayTalker);
 
     return newTalker;
   };
- 
+
+// const editTalker = async (id) => {
+//     const arrayTalkerEdit = await getTalkerById.execute(id);
+//     // const editTalker = { id, name, age, talk };
+
+//     // await writeFile(arrayTalker);
+//     console.log(arrayTalkerEdit);
+//     // return 
+//   };
+
 module.exports = {
     readTalkerFile,
     getTalkerById,
     writeFile,
     createLogin,
     createTalker,
+    // editTalker,
   };

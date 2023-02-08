@@ -1,5 +1,10 @@
 const express = require('express');
 const file = require('../utils/readAndWriteFiles');
+const validateTalkerName = require('../middlewares/validateTalkerName');
+const validateTalkerAge = require('../middlewares/validateTalkerAge');
+const validateTalk = require('../middlewares/validateTalk');
+const validateTalkRate = require('../middlewares/validateTalkRate');
+const validateToken = require('../middlewares/validateToken');
 
 const talkerRouter = express.Router();
 
@@ -21,25 +26,25 @@ talkerRouter.get('/:id', async (req, res) => {
     return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
   });
 
-talkerRouter.post('/', async (req, res) => {
-    const { name, age, talk } = req.body; 
-    const newLogin = await file.createLogin(name, age, talk);
+talkerRouter.post('/', validateToken, validateTalkerName, validateTalkerAge, 
+validateTalk, validateTalkRate, async (req, res) => {
+    const { name, age, talk } = req.body;
 
-    if (name === undefined) {
-     return res.status(400).json({ message: 'O campo "email" é obrigatório' });
-    }
-    if (name.length < 3) {
-     return res.status(400).json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
-    }
-    if (Number(age) === undefined) {
-      return res.status(400).json({ message: 'O campo "age" é obrigatório' });
-     }
-    if (!age.isNaN) {
-      return res.status(400).json({ message: 'O campo "age" deve ser do tipo "number"' });
-     }
-     
-     return res.status(200).json(newLogin);
+    const newLoginTalker = await file.createTalker(name, age, talk);
+    
+     console.log(newLoginTalker);
+
+     return res.status(201).json(newLoginTalker);
   });
+
+// talkerRouter.put('/:id', validateToken, validateTalkerName, validateTalkerAge, 
+// validateTalk, validateTalkRate, async (req, res) => {
+//   const { id } = req.params;
+
+//   const editTalker = await file.editTalker(id);
+
+//   res.status(200).json(editTalker);
+// });
 
   module.exports = {
     talkerRouter,

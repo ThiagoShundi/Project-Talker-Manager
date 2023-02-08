@@ -6,8 +6,7 @@ const validatePassword = require('../middlewares/validatePassword');
 const loginRouter = express.Router();
 
 loginRouter.post('/', validateEmails, validatePassword, async (req, res) => {
-    const { email, password } = req.body; 
-    const newLogin = await file.createLogin(email, password);
+    const newLogin = await file.createLogin();
 
      return res.status(200).json(newLogin);
   });
