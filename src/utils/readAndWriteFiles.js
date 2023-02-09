@@ -70,21 +70,22 @@ const editTalker = async (id, name, age, talk) => {
 const deleteTalker = async (id) => {
     const arrayTalker = await readTalkerFile();
 
+    console.log(arrayTalker);
     const talkerExists = arrayTalker.some(
-        (tal) => tal.id === id,
+        (tal) => tal.id === Number(id),
       );
-    
+      console.log(talkerExists);
     if (talkerExists) {
         const talkerDel = arrayTalker.filter(
-          (fil) => fil.id !== id,
+          (fil) => fil.id !== Number(id),
         );
       
+        console.log(talkerDel);
+
         await writeFile(talkerDel);
 
         return talkerDel;
     }
-
-    return false;
   };
 
 module.exports = {
