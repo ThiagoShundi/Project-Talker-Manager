@@ -7,6 +7,17 @@ const validateTalkRate = require('../middlewares/validateTalkRate');
 const validateToken = require('../middlewares/validateToken');
 
 const talkerRouter = express.Router();
+talkerRouter.get('/search', validateToken, async (req, res) => {
+  const { q } = req.query;
+  const talkers = await file.readTalkerFile();
+
+  if (q === undefined) {
+    return res.status(200).json(talkers);
+  }
+  const talkerFilter = talkers.filter((tal) => tal.name.includes(q));
+  console.log(talkerFilter);
+  return res.status(200).json(talkerFilter);
+});
 
 talkerRouter.get('/', async (req, res) => {
     const talkers = await file.readTalkerFile();
