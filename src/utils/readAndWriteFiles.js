@@ -21,9 +21,7 @@ const getTalkerById = async (id) => {
 const writeFile = async (content) => {
   const path = '../talker.json';
   try {
-     const arrayLogin = await fs.writeFile(join(__dirname, path), JSON.stringify(content));
-
-    return JSON.parse(arrayLogin);
+     await fs.writeFile(join(__dirname, path), JSON.stringify(content));
   } catch (error) {
     console.log(error);
     return null;
@@ -55,14 +53,39 @@ const createTalker = async (name, age, talk) => {
     return newTalker;
   };
 
-// const editTalker = async (id) => {
-//     const arrayTalkerEdit = await getTalkerById.execute(id);
-//     // const editTalker = { id, name, age, talk };
+const editTalker = async (id, name, age, talk) => {
+    const arrayTalker = await readTalkerFile();
+    console.log(id, name, age, talk);
+    const arrayTalkerEdit = arrayTalker.map((act) => {
+        if (act.id !== Number(id)) return act;
+        return { ...act, name, age, talk };
+    });
 
-//     // await writeFile(arrayTalker);
-//     console.log(arrayTalkerEdit);
-//     // return 
-//   };
+    console.log(arrayTalkerEdit);
+    await writeFile(arrayTalkerEdit);
+
+    return arrayTalkerEdit;
+  };
+
+const deleteTalker = async (id) => {
+    const arrayTalker = await readTalkerFile();
+
+    const talkerExists = arrayTalker.some(
+        (tal) => tal.id === id,
+      );
+    
+    if (talkerExists) {
+        const talkerDel = arrayTalker.filter(
+          (fil) => fil.id !== id,
+        );
+      
+        await writeFile(talkerDel);
+
+        return talkerDel;
+    }
+
+    return false;
+  };
 
 module.exports = {
     readTalkerFile,
@@ -70,5 +93,6 @@ module.exports = {
     writeFile,
     createLogin,
     createTalker,
-    // editTalker,
+    editTalker,
+    deleteTalker,
   };

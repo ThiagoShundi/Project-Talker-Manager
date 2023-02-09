@@ -31,20 +31,28 @@ validateTalk, validateTalkRate, async (req, res) => {
     const { name, age, talk } = req.body;
 
     const newLoginTalker = await file.createTalker(name, age, talk);
-    
-     console.log(newLoginTalker);
 
      return res.status(201).json(newLoginTalker);
   });
 
-// talkerRouter.put('/:id', validateToken, validateTalkerName, validateTalkerAge, 
-// validateTalk, validateTalkRate, async (req, res) => {
-//   const { id } = req.params;
+talkerRouter.put('/:id', validateToken, validateTalkerName, validateTalkerAge, 
+validateTalk, validateTalkRate, async (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk } = req.body;
+  // console.log(talk);
+  await file.editTalker(id, name, age, talk);
+  const newEdit = { id: Number(id), name, age, talk };
 
-//   const editTalker = await file.editTalker(id);
+  res.status(200).json(newEdit);
+});
 
-//   res.status(200).json(editTalker);
-// });
+talkerRouter.delete('/:id', validateToken, async (req, res) => {
+  const { id } = req.params;
+
+  const del = await file.deleteTalker(id);
+
+  res.status(204).json(del);
+});
 
   module.exports = {
     talkerRouter,
